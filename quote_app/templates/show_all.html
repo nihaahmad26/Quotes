@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Quotes</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto"></ul>
+                <span class="navbar-text">
+                    Welcome, {{user.first_name}}! </a> 
+                    <a href="/quotes/page">Add new Quote</a>
+                    <a href="/logout" role="button">Logout</a>
+                </span>
+            </div>
+        </div>
+    </nav>
+            <div>
+                <h3>Favorite Quotes</h3>
+                {% for quote in my_fav %}
+                <div>
+                    <h5>{{quote.author}}: <a href="/quotes/{{quote.id}}/update">{{quote.description}}</a></h5>
+                    <p>added by <a href="/users/{{quote.creator.id}}"> {{quote.creator.first_name}} {{quote.creator.last_name}}</a> </p>
+                    {% if user == quote.creator %}
+                    <a href="quotes/{{quote.id}}/update"></a>
+                    <a href="quotes/{{quote.id}}/delete"></a>
+                   
+                </div>
+
+                {% else %}
+                
+                <a href="/unfavorite/{{quote.id}}">Unfavorite</a>
+                {% endif %}
+                {% endfor %}
+
+                <h3>Other Quotes</h3>
+                {% for quote in not_my_fav %}
+                <div>
+                    <h5>{{quote.author}}: <a href="/quotes/{{quote.id}}/update">{{quote.description}}</a></h5>
+                    <p>(added by <a href="/users/{{quote.creator.id}}">{{quote.creator.first_name}} {{quote.creator.last_name}})</a></p>
+                 
+                    {% endfor %}
+            
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav>
+        <div>
+            <a href="/quotes">All Quotes</a>
+            <button type="button" data-toggle="collapse" data-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto"></ul>
+                <span>
+                    Welcome, {{request.session.greeting}} <a href="/logout" role="button">Logout</a>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div>
+        <div>
+            <div>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <h3>{{quote.title}}</h3>
+                <p>Added by: {{quote.creator.first_name}} {{quote.creator.last_name}}</p>
+                <p>Added on: {{quote.created_at}}</p>
+                <p>Last Updated on: {{quote.updated_at}}</p>
+                {% if quote.creator.id != request.session.user_id %}
+                <p>Description: {{quote.description}}</p>
+                {% else %}
+                <form action="/quotes/{{quote.id}}/update" method="post">
+                    {% csrf_token %}
+                    <label for="author">Author</label>
+                    <input name="author" value= "{{quote.author}}">
+                    <label for="description">Description</label>
+                    <input name="description" value= "{{quote.description}}">
+                    <button type=submit >Update</button>
+                </form>
+                <a href="/quotes/{{quote.id}}/delete" role="button">Delete</a>
+                {% endif %}
+            </div>
+
+            <div>
+                <h3>Users Who Favorited the Quote</h3>
+                <ul>
+                    {% for fav in quote.favorited_by.all %}
+                    <li>{{fav.first_name}} {{fav.last_name}}</li>
+                    {% endfor %}
+                </ul>
+
+                {% if current_user in quote.favorited_by.all %}
+                <a href="/unfavorite/{{quote.id}}" role="button">Remove From Favorites</a>
+                {% else %}
+                <a href="/favorite/{{quote.id}}" role="button">Add to Favorites</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
